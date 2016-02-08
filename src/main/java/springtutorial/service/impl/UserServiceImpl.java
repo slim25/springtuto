@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
 		return userDao.getByEmail(email);
 	}
 
-	public User getUsersByName(String name) throws UserNotFound {
+	public User getUserByName(String name) throws UserNotFound {
 		return userDao.getUsersByName(name);
 	}
 

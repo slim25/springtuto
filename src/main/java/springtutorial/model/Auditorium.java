@@ -9,6 +9,14 @@ public class Auditorium {
 	private Integer numberOfSeats;
 	private List<Integer> vipSeats;
 	
+	public Auditorium(Integer id, String name, Integer numberOfSeats, List<Integer> vipSeats) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.numberOfSeats = numberOfSeats;
+		this.vipSeats = vipSeats;
+	}
+
 	public Auditorium() {
 	}
 
@@ -33,7 +41,6 @@ public class Auditorium {
 	}
 
 	public void setVipSeats(String vipSeats) {
-		System.out.println("Inside setVip seats");
 		String [] vipSeatsNumbers = vipSeats.split(",");
 		if(vipSeatsNumbers.length > 0){
 			this.vipSeats = new ArrayList<>();
@@ -51,6 +58,12 @@ public class Auditorium {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Auditorium [id=" + id + ", name=" + name + ", numberOfSeats=" + numberOfSeats + ", vipSeats=" + vipSeats
+				+ "]";
 	}
 	
 	

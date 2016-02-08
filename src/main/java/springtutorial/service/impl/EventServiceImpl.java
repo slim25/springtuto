@@ -20,7 +20,6 @@ public class EventServiceImpl implements EventService {
 
 	public void create(Event event) {
 		eventDao.create(event);
-
 	}
 
 	public boolean remove(Event event) {

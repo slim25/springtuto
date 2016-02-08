@@ -17,7 +17,20 @@ public class Event {
 	private Map<Date, Auditorium> auditoriumAndDate;
 	private Set<Ticket> purchasedTickets;
 
+
 	public Event() {
+	}
+	
+	public Event(Integer id, String name, Float price, Rating rating, Integer timesPerDay,
+			Map<Date, Auditorium> auditoriumAndDate, Set<Ticket> purchasedTickets) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.rating = rating;
+		this.timesPerDay = timesPerDay;
+		this.auditoriumAndDate = auditoriumAndDate;
+		this.purchasedTickets = purchasedTickets;
 	}
 
 	public String getName() {
@@ -84,6 +97,16 @@ public class Event {
 	}
 	public void assignAuditorium(Auditorium auditorium, Date date){
 		this.auditoriumAndDate.put(date, auditorium);
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		for(Ticket ticket: purchasedTickets){
+			builder.append("[ " +ticket +" ] ");
+		}
+		return "Event [id=" + id + ", name=" + name + ", price=" + price + ", rating=" + rating + ", timesPerDay="
+				+ timesPerDay + ", auditoriumAndDate=" + auditoriumAndDate + ", purchasedTickets=" + purchasedTickets
+				+ "]";
 	}
 	
 }

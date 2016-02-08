@@ -18,7 +18,7 @@ public interface UserService {
 	
 	User getUserByEmail(String email) throws UserNotFound;
 	
-	User getUsersByName(String name) throws UserNotFound;
+	User getUserByName(String name) throws UserNotFound;
 	
 	List<Ticket> getBookedTickets(User user);
 	

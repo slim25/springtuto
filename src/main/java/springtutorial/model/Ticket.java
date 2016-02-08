@@ -9,8 +9,23 @@ public class Ticket {
 	private User user;
 	private Date date;
 	
+	@Override
+	public String toString() {
+		return "Ticket [id=" + id + ", event=" + event.getName() + ", seatNumber=" + seatNumber + ", user=" + user.getName() + ", date="
+				+ date + "]";
+	}
+
 	public Ticket() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Ticket(Integer id, Event event, Integer seatNumber, User user, Date date) {
+		super();
+		this.id = id;
+		this.event = event;
+		this.seatNumber = seatNumber;
+		this.user = user;
+		this.date = date;
 	}
 
 	public Integer getId() {
