@@ -49,7 +49,7 @@ public class App {
 		App app = ctx.getBean(springtutorial.main.App.class);
 		
 		showAuditoryService(app);
-//		showBookingService(app);
+		showBookingService(app);
 		try {
 			showEventService(app);
 			showUserService(app);
@@ -59,7 +59,7 @@ public class App {
 	}
 	
 	private static void showAuditoryService(App app){
-		System.out.println("Auditorium Service");
+		System.out.println("----- Auditorium Service");
 		List<Auditorium> auditoriums = app.auditoriumService.getAuditoriums();
 		for(Auditorium audit : auditoriums){
 			List<Integer> vipSeats = audit.getVipSeats();
@@ -87,7 +87,7 @@ public class App {
 	}
 	
 	private static void showEventService(App app) throws ParseException{
-		System.out.println("Event Service");
+		System.out.println("----- Event Service");
 		Map<Date,Auditorium> dateAndAudetorium = new HashMap<>();
 		Auditorium testAuditorium = app.auditoriumService.getAuditoriums().iterator().next();
 		dateAndAudetorium.put(dateformat.parse("2016-02-10"), testAuditorium);
@@ -98,7 +98,7 @@ public class App {
 		try {
 			Date eventDate = dateformat.parse("2016-02-10");
 			purchasedTicket.add(new Ticket(33, null, 5, app.userService.getById(userID), eventDate));
-			Event testEvent = new Event(33, "Party", 122.0f, Rating.HIGH, 2, dateAndAudetorium, purchasedTicket);
+			Event testEvent = new Event(33, eventName, 122.0f, Rating.HIGH, 2, dateAndAudetorium, purchasedTicket);
 			testEvent.getPurchasedTickets().iterator().next().setEvent(testEvent);
 			
 			app.eventService.create(testEvent);
@@ -116,14 +116,14 @@ public class App {
 			List<Event> allEvents = app.eventService.getAll();
 			System.out.println("All events : ");
 			for(Event event : allEvents){
-				System.out.print("[ " +event + " ] ");
+				System.out.println("[ " +event + " ] ");
 			}
 			//events to date
 			Date toDate = dateformat.parse("2016-02-9");
 			List<Event> eventsToDate = app.eventService.getNextEvents(toDate);
 			System.out.println("Events to date " + toDate+ " : ");
 			for(Event event : eventsToDate){
-				System.out.print("[ " +event + " ] ");
+				System.out.println("[ " +event + " ] ");
 			}
 			//events from - to date
 			Date fromDate = dateformat.parse("2016-02-1");
@@ -155,7 +155,7 @@ public class App {
 	}
 	
 	private static void showUserService(App app) throws ParseException{
-		System.out.println("User Service");
+		System.out.println("----- User Service");
 		List<Ticket> userBookedTicket = new ArrayList<>();
 		Event event = null;
 		String eventName = "Glasgou";
@@ -198,7 +198,48 @@ public class App {
 	}
 	
 	private static void showBookingService(App app){
+		System.out.println("----- Booking Service");
+		// bookingService.getTicketPrice
+		Event testEvent = null;
+		User user = null;
+		Integer userID = 1;
+		String eventName = "Walk around";
+		try {
+			user = app.userService.getById(1);
+			testEvent = app.eventService.getByName(eventName);
+		} catch (EventNotFound  | UserNotFound e) {
+			if(e instanceof UserNotFound){
+				System.out.println("User with id : " + userID + " does not exist");
+			}else{
+				System.out.println("Event with name : " + eventName + " does not exist");
+			}
+			e.printStackTrace();
+			return;
+		}
+		Map<Date, Auditorium> entrySet = testEvent.getAuditoriumAndDate();
+		Date eventDate = entrySet.keySet().iterator().next();
+		Auditorium auditorium = entrySet.values().iterator().next();
+		Integer vipSeat = auditorium.getVipSeats().iterator().next();
 		
-//		List<Auditorium> auditoriums = app.bookingService.getPurchasedTicketsForEvent(event, date);
+		Float ticketPrice = app.bookingService.getTicketPrice(testEvent, eventDate, vipSeat, user);
+		System.out.println("Ticket price for [event : " + testEvent + "; date : " + eventDate 
+				+ "; seat : " + vipSeat + "; user : " + user + "] = " + ticketPrice);
+		
+		// bookingService.getPurchasedTickets
+		Ticket ticket = new Ticket(33, testEvent, vipSeat, user, eventDate);
+		
+		boolean isBooked = app.bookingService.bookTicket(user, ticket);
+		boolean userContains = user.getBookedTickets().contains(ticket);
+		boolean eventContains = testEvent.getPurchasedTickets().contains(ticket);
+		
+		System.out.println("Ticket for [ event : " + testEvent + "; seat : " + vipSeat + "; user : " + user + "; date : " + eventDate + "] " 
+		+ " is booked = " + (isBooked && userContains && eventContains));
+		
+		// bookingService.getPurchasedTickets
+		Set<Ticket> purchasedTickets = app.bookingService.getPurchasedTicketsForEvent(testEvent, eventDate);
+		System.out.println("Purchased tickets for event : " + testEvent + "; date : " + eventDate + " :");
+		for(Ticket curTicket : purchasedTickets){
+			System.out.println("[ "+ curTicket +" ]");
+		}
 	}
 }

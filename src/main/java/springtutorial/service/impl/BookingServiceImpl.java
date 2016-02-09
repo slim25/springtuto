@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import springtutorial.dao.EventDao;
 import springtutorial.dao.UserDao;
+import springtutorial.dao.impl.EventDaoImpl;
 import springtutorial.dao.impl.UserDaoImpl;
 import springtutorial.exception.EventNotFound;
 import springtutorial.model.Auditorium;
@@ -35,6 +36,9 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	@Qualifier("userDao")
 	UserDao userDao;
+	public BookingServiceImpl() {
+		System.out.println(" Init BookingServiceImpl");
+	}
 	
 	@Override
 	public Float getTicketPrice(Event event, Date date, Integer seatNumber,
@@ -44,9 +48,9 @@ public class BookingServiceImpl implements BookingService {
 		Auditorium auditorium = event.getAuditoriumAndDate().get(date);
 		List<Integer> vipSeats = auditorium.getVipSeats();
 			//All prices for high rated movies should be higher (For example, 1.2xBasePrice)
-		if(event.getRating().equals(Rating.HIGH))eventBasePrice*=1.2;
+		if(event.getRating().equals(Rating.HIGH))eventBasePrice*=1.2f;
 			//Vip seats should cost more than regular seats (For example, 2xBasePrice)
-		if(vipSeats.contains(seatNumber)) eventBasePrice*=2;
+		if(vipSeats.contains(seatNumber)) eventBasePrice*=2f;
 			//User is needed to calculate discount 
 		if(discount.getValue() != 0f){ 
 			eventBasePrice = eventBasePrice - (eventBasePrice*discount.getValue())/100;
@@ -76,6 +80,14 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public Set<Ticket> getPurchasedTicketsForEvent(Event event, Date date) {
+		boolean eventPresent = false;
+		for(Event ev : EventDaoImpl.events){
+			if(ev.getId() == event.getId()){
+				event = ev;
+				eventPresent = true;
+			}
+		}
+		if(eventPresent == false) return null;
 		Set<Ticket> result = new HashSet<>();
 		
 		Calendar purchaseTicketCalendar = Calendar.getInstance();

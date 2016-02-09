@@ -14,6 +14,7 @@ public class DiscountServiceImpl extends DiscountService{
 
 	public DiscountServiceImpl(List<DiscountStrategy> strategies) {
 		super(strategies);
+		System.out.println(" Init DiscountServiceImpl");
 	}
 	public DiscountServiceImpl() {
 		this(null);

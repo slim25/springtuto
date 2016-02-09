@@ -15,6 +15,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserDao userDao;
 	
+	public UserServiceImpl(){
+		System.out.println(" Init UserServiceImpl");
+	}
 	public void register(User user) {
 		userDao.addUser(user);
 	}

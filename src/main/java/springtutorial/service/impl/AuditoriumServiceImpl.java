@@ -16,7 +16,10 @@ public class AuditoriumServiceImpl implements AuditoriumService {
 	@Autowired
 	@Qualifier("AuditoriumDAO")
 	AuditoriumDao auditoriumDao;
-
+	public AuditoriumServiceImpl() {
+		System.out.println(" Init AuditoriumServiceImpl");
+	}
+	
 	public List<Auditorium> getAuditoriums() {
 		return auditoriumDao.getAuditoriums();
 

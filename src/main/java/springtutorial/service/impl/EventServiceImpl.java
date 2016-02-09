@@ -17,7 +17,10 @@ public class EventServiceImpl implements EventService {
 	@Autowired
 	@Qualifier("EventDAO")
 	EventDao eventDao;
-
+	public EventServiceImpl(){
+		System.out.println(" Init EventServiceImpl");
+	}
+	
 	public void create(Event event) {
 		eventDao.create(event);
 	}
