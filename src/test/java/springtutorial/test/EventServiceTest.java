@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.internal.runners.statements.Fail;
 import org.junit.runners.MethodSorters;
 
+import springtutorial.aspect.CounterAspect;
 import springtutorial.dao.impl.EventDaoImpl;
 import springtutorial.exception.EventNotFound;
 import springtutorial.exception.UserNotFound;
@@ -95,6 +96,12 @@ public class EventServiceTest extends BaseServiceTest {
 	public void EtestRemoveEvent(){
 		eventService.remove(testEvent);
 		assertFalse("Event does not deleted",EventDaoImpl.events.contains(testEvent));
+	}
+	
+	@Test
+	public void Ftest() throws EventNotFound{
+		eventService.getByName("Glasgou");
+		System.out.println("RESULT = " + CounterAspect.eventAccessedTimes);
 	}
 	
 }

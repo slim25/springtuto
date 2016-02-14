@@ -2,18 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
  		http://www.springframework.org/schema/context
- 		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+ 		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+ 		http://www.springframework.org/schema/aop
+ 		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
-
-	<context:annotation-config/>
 	<context:component-scan base-package="springtutorial" />
+
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<context:annotation-config/>
 	<bean id="dateFormat" class="java.text.SimpleDateFormat">
 		<constructor-arg value="yyyy-MM-dd" />
 	</bean>
+	
 	<import resource="spring-auditorium.xml"/>
 	<import resource="spring-event.xml"/>
 	<import resource="spring-user.xml"/>

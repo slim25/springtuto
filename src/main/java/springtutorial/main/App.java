@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import springtutorial.aspect.CounterAspect;
 import springtutorial.dao.impl.EventDaoImpl;
 import springtutorial.dao.impl.UserDaoImpl;
 import springtutorial.exception.EventNotFound;
@@ -33,13 +34,13 @@ import springtutorial.service.impl.EventServiceImpl;
 
 public class App {
 	@Autowired
-	AuditoriumService auditoriumService;
+	public AuditoriumService auditoriumService;
 	@Autowired
-	BookingService bookingService;
+	public BookingService bookingService;
 	@Autowired
-	EventService eventService;
+	public EventService eventService;
 	@Autowired
-	UserService userService;
+	public UserService userService;
 	
 	private static StringBuilder builder = new StringBuilder();
 	private static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
@@ -48,14 +49,28 @@ public class App {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/spring-context.xml");
 		App app = ctx.getBean(springtutorial.main.App.class);
 		
-		showAuditoryService(app);
-		showBookingService(app);
 		try {
-			showEventService(app);
-			showUserService(app);
-		} catch (ParseException e) {
+			app.eventService.getByName("Glasgou");
+			app.eventService.getByName("Glasgou");
+			app.eventService.getByName("Walk around");
+			
+			System.out.println("RESULT = " + CounterAspect.eventAccessedTimes);
+			
+			app.bookingService.getTicketPrice(new Event(11, "CustomEvent", 1f,null,null,null,null), null, null, null);
+			
+			
+		} catch (EventNotFound e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+//		showAuditoryService(app);
+//		showBookingService(app);
+//		try {
+//			showEventService(app);
+//			showUserService(app);
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private static void showAuditoryService(App app){
