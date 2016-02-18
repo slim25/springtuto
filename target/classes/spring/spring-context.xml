@@ -15,7 +15,7 @@
 
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	<context:annotation-config/>
-	<bean id="dateFormat" class="java.text.SimpleDateFormat">
+	<bean id="dateFormat" class="java.text.SimpleDateFormat" scope="prototype">
 		<constructor-arg value="yyyy-MM-dd" />
 	</bean>
 	

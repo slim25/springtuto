@@ -9,7 +9,7 @@ import springtutorial.exception.NotExistSuchAuditorium;
 import springtutorial.model.Auditorium;
 @Repository
 public class AuditoriumDaoImpl implements AuditoriumDao{
-	private List<Auditorium> auditoriums;
+	public static List<Auditorium> auditoriums;
 	
 	public AuditoriumDaoImpl(List<Auditorium> auditoriums){
 		this.auditoriums = auditoriums;

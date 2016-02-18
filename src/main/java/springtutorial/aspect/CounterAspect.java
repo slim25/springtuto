@@ -12,7 +12,7 @@ import springtutorial.model.Event;
 import springtutorial.model.Ticket;
 @Component
 @Aspect
-public class CounterAspect {
+public class CounterAspect extends AbstractAspect{
 	
 	public static Map<String, Integer> eventAccessedTimes = new HashMap<>();
 	public static Map<String, Integer> eventCountPriceQueried = new HashMap<>();
@@ -41,9 +41,10 @@ public class CounterAspect {
 	}
 	
 	@Before("execution(* springtutorial.service.impl.BookingServiceImpl.bookTicket"
-			+ "(..))"
-			+ " && args(ticket,..)")
+			+ "(..)) && args(..,ticket)")
 	public void countHowManyTicketsWereBooked(Ticket ticket){
+		//ticket null - when need to call LuckyWinnerAspect
+		if(ticket == null) return;
 		String eventName = ticket.getEvent().getName();
 		System.out.println("3.Event name = " + eventName);
 		Integer eventCount = eventCountBookedTicket.get(eventName);
@@ -51,15 +52,6 @@ public class CounterAspect {
 		
 		eventCountBookedTicket.put(eventName, eventCount);
 		System.out.println("RESULT Booked Ticket = " + CounterAspect.eventCountBookedTicket);
-	}
-	
-	private Integer checkForFirstTimeCall(Integer eventCount){
-		if(eventCount == null || eventCount == 0){
-			eventCount = new Integer(1); 
-		}else{
-			eventCount++;
-		}
-		return eventCount;
 	}
 	
 }

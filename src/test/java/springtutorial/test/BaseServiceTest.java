@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import springtutorial.dao.impl.AuditoriumDaoImpl;
+import springtutorial.dao.impl.EventDaoImpl;
+import springtutorial.dao.impl.UserDaoImpl;
 import springtutorial.model.Auditorium;
 import springtutorial.model.Event;
 import springtutorial.model.Ticket;
@@ -38,11 +42,11 @@ public abstract class BaseServiceTest {
 	@Autowired
 	protected AuditoriumService auditoriumService;
 	@Autowired
-	BookingService bookingService;
+	protected BookingService bookingService;
 	@Autowired
-	EventService eventService;
+	protected EventService eventService;
 	@Autowired
-	ApplicationContext context;
+	protected ApplicationContext context;
 	
 	protected User createUser(Integer userId, String userEmail, String userName, Date birthday) throws ParseException {
 		Map<Date, Auditorium> dateAndAudetorium = new HashMap<>();
@@ -65,4 +69,6 @@ public abstract class BaseServiceTest {
 		return userBobko;
 
 	}
+	
+	
 }

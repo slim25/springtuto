@@ -98,10 +98,4 @@ public class EventServiceTest extends BaseServiceTest {
 		assertFalse("Event does not deleted",EventDaoImpl.events.contains(testEvent));
 	}
 	
-	@Test
-	public void Ftest() throws EventNotFound{
-		eventService.getByName("Glasgou");
-		System.out.println("RESULT = " + CounterAspect.eventAccessedTimes);
-	}
-	
 }
