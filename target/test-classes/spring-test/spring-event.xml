@@ -1,0 +1,88 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+ 		http://www.springframework.org/schema/beans
+ 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+ 		http://www.springframework.org/schema/context
+ 		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	
+	<bean id="day1" factory-bean="dateFormat" factory-method="parse">
+			<constructor-arg value="2016-02-7" />
+	</bean>
+	<bean id="day2" factory-bean="dateFormat" factory-method="parse">
+			<constructor-arg value="2016-02-8" />
+	</bean>
+	<bean id="day3" factory-bean="dateFormat" factory-method="parse">
+			<constructor-arg value="2016-02-9" />
+	</bean>
+	
+	<bean id="ticket1" class="springtutorial.model.Ticket">
+		<property name="id" value="1"/>
+		<property name="event" ref="event1"/>
+		<property name="seatNumber" value="11"/>
+		<property name="user" ref="user1"/>
+		<property name="date" ref="day2"/>
+	</bean>
+	<bean id="ticket2" class="springtutorial.model.Ticket">
+		<property name="id" value="2"/>
+		<property name="event" ref="event2"/>
+		<property name="seatNumber" value="19"/>
+		<property name="user" ref="admin"/>
+		<property name="date" ref="day1"/>
+	</bean>
+	
+	
+	<bean id="event1" class="springtutorial.model.Event">
+		<property name="id" value="1"/>
+		<property name="name" value="Glasgou"/>
+		<property name="price" value="11.20"/>
+		<property name="rating" value="HIGH"/>
+		<property name="timesPerDay" value="3"/>
+		<property name="auditoriumAndDate">
+			<map>
+				<entry key-ref="day1" value-ref="auditorium1"/>
+				<entry key-ref="day2" value-ref="auditorium2"/>
+				<entry key-ref="day3" value-ref="auditorium3"/>
+			</map>
+		</property>
+		<property name="purchasedTickets" >
+			<set>
+				<ref bean="ticket1"/>
+			</set>
+		</property>
+		
+	</bean>
+	
+	<bean id="event2" class="springtutorial.model.Event">
+		<property name="id" value="2"/>
+		<property name="name" value="Walk around"/>
+		<property name="price" value="120.50"/>
+		<property name="rating" value="MID"/>
+		<property name="timesPerDay" value="1"/>
+		<property name="auditoriumAndDate">
+			<map>
+				<entry key-ref="day1" value-ref="auditorium1"/>
+				<entry key-ref="day2" value-ref="auditorium3"/>
+			</map>
+		</property>
+		<property name="purchasedTickets" >
+			<set>
+				<ref bean="ticket2"/>
+			</set>
+		</property>
+		
+	</bean>
+	
+	<bean id="EventDAO" class="springtutorial.dao.impl.EventDaoImpl">
+		<property name="events">
+			<list>
+				<ref bean="event1"/>
+				<ref bean="event2"/>
+			</list>
+		</property>
+	</bean>
+</beans>

@@ -9,7 +9,7 @@ import springtutorial.model.User;
 
 public class BirthdayDiscountStrategy implements DiscountStrategy {
 
-	public Map.Entry<String, Float> getDiscountPercentage(User user, Date eventDate) {
+	public DiscountWithPercentage getDiscountPercentage(User user, Date eventDate) {
 		Date userBirthday = user.getBirthday();
 		Calendar userCalendar = Calendar.getInstance();
 		Calendar eventCalendar = Calendar.getInstance();
@@ -18,7 +18,7 @@ public class BirthdayDiscountStrategy implements DiscountStrategy {
 		
 		return (userCalendar.get(Calendar.MONTH) == eventCalendar.get(Calendar.MONTH))
 				&& (userCalendar.get(Calendar.DAY_OF_MONTH) == eventCalendar.get(Calendar.DAY_OF_MONTH)) ? 
-						new MyEntry("BirthdayDiscountStrategy",5f) : new MyEntry("BirthdayDiscountStrategy",0f);
+						new DiscountWithPercentage("BirthdayDiscountStrategy",5f) : new DiscountWithPercentage("BirthdayDiscountStrategy",0f);
 
 	}
 

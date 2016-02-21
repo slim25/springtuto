@@ -32,7 +32,7 @@ import springtutorial.service.EventService;
 import springtutorial.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/spring-context.xml"})
+@ContextConfiguration(locations = {"classpath:spring-test/spring-context.xml"})
 public abstract class BaseServiceTest {
 	protected static StringBuilder builder = new StringBuilder();
 	protected static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,7 +50,7 @@ public abstract class BaseServiceTest {
 	
 	protected User createUser(Integer userId, String userEmail, String userName, Date birthday) throws ParseException {
 		Map<Date, Auditorium> dateAndAudetorium = new HashMap<>();
-		Auditorium testAuditorium = auditoriumService.getAuditoriums().iterator().next();
+		Auditorium testAuditorium = auditoriumService.getAuditoriums().get(0);
 		dateAndAudetorium.put(dateformat.parse("2016-02-10"), testAuditorium);
 		Date eventDate = dateformat.parse("2016-02-10");
 		Set<Ticket> purchasedTicket = new HashSet<>();

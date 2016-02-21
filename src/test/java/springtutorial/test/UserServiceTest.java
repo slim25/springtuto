@@ -37,7 +37,7 @@ public class UserServiceTest extends BaseServiceTest{
 	@Test
 	public void AtestRegisterUser() throws ParseException, UserNotFound {
 		Map<Date,Auditorium> dateAndAudetorium = new HashMap<>();
-		Auditorium testAuditorium = auditoriumService.getAuditoriums().iterator().next();
+		Auditorium testAuditorium = auditoriumService.getAuditoriums().get(0);
 		dateAndAudetorium.put(dateformat.parse("2016-02-10"), testAuditorium);
 		Date eventDate = dateformat.parse("2016-02-10");
 		Integer userID = 1;

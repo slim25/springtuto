@@ -2,6 +2,8 @@ package springtutorial.dao.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import springtutorial.dao.UserDao;
@@ -10,6 +12,8 @@ import springtutorial.model.User;
 @Repository("userDao")
 public class UserDaoImpl implements UserDao{
 	public static List<User> users;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	public void addUser(User user) {
 		users.add(user);

@@ -10,19 +10,24 @@ import springtutorial.discountStrategy.DiscountStrategy;
 import springtutorial.model.User;
 import springtutorial.service.DiscountService;
 @Service
-public class DiscountServiceImpl extends DiscountService{
+public class DiscountServiceImpl implements DiscountService{
+	private List<DiscountStrategy> discountStrategies;
 
 	public DiscountServiceImpl(List<DiscountStrategy> strategies) {
-		super(strategies);
+		this.discountStrategies = strategies;
 		System.out.println(" Init DiscountServiceImpl");
 	}
-	public DiscountServiceImpl() {
-		this(null);
+	public DiscountServiceImpl(){
+	
+	}
+	
+	public List<DiscountStrategy> getDiscountStrategies() {
+		return discountStrategies;
 	}
 
 	@Override
-	public Map.Entry<String,Float> getDiscountPercentage(User user, Date date) {
-		Map.Entry<String,Float> result = null;
+	public DiscountStrategy.DiscountWithPercentage getDiscountPercentage(User user, Date date) {
+		DiscountStrategy.DiscountWithPercentage result = null;
 		for(DiscountStrategy discStrategy : this.getDiscountStrategies()){
 			if(result == null || (result != null && result.getValue()
 					.compareTo(discStrategy.getDiscountPercentage(user, date).getValue())<0))

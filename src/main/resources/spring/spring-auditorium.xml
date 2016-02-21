@@ -38,7 +38,7 @@
 	</bean>
 	
 	
-	<bean id="AuditoriumDAO" class="springtutorial.dao.impl.AuditoriumDaoImpl">
+	<bean id="AuditoriumDAO" class="springtutorial.dao.impl.AuditoriumDaoImpl" init-method="initDefaultDBData">
 		<constructor-arg>
 			<list>
 				<ref bean="auditorium1"/>

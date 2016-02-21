@@ -29,7 +29,7 @@ public class DiscountAspect extends AbstractAspect{
 			Object retVal = pjp.proceed(args);
 			
 			@SuppressWarnings("unchecked")
-			Map.Entry<String,Float> returnValue = (DiscountStrategy.MyEntry)retVal;
+			Map.Entry<String,Float> returnValue = (DiscountStrategy.DiscountWithPercentage)retVal;
 			String userName = user.getName();
 			
 			Map<String, Integer> dicountGivenCountForUser = discountGivenTimesForUser.get(userName);

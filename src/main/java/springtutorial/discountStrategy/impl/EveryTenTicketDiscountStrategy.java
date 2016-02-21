@@ -10,10 +10,10 @@ import springtutorial.model.User;
 
 public class EveryTenTicketDiscountStrategy implements DiscountStrategy{
 
-	public Map.Entry<String, Float> getDiscountPercentage(User user, Date date) {
+	public DiscountWithPercentage getDiscountPercentage(User user, Date date) {
 		List<Ticket> bookedTickets = user.getBookedTickets();
 		return (bookedTickets == null || bookedTickets.size() == 0 || bookedTickets.size()%10 != 0) ?
-				new MyEntry("EveryTenTicketDiscountStrategy",0f) : new MyEntry("EveryTenTicketDiscountStrategy",50f);
+				new DiscountWithPercentage("EveryTenTicketDiscountStrategy",0f) : new DiscountWithPercentage("EveryTenTicketDiscountStrategy",50f);
 	}
 
 }

@@ -18,6 +18,7 @@ public class Auditorium {
 	}
 
 	public Auditorium() {
+		this.vipSeats = new ArrayList<>();
 	}
 
 	public String getName() {

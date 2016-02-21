@@ -11,17 +11,8 @@ import springtutorial.model.Event;
 import springtutorial.model.User;
 
 
-public abstract class DiscountService {
-	private List<DiscountStrategy> discountStrategies;
-
-
-	public DiscountService(List<DiscountStrategy> strategies) {
-		this.discountStrategies = strategies;
-	}
-
-	public List<DiscountStrategy> getDiscountStrategies() {
-		return discountStrategies;
-	}
-	public abstract Map.Entry<String,Float> getDiscountPercentage(User user, 
+public interface DiscountService {
+	
+	DiscountStrategy.DiscountWithPercentage getDiscountPercentage(User user, 
 			Date date);
 }

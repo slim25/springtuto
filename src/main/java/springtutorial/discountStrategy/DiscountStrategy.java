@@ -6,13 +6,13 @@ import java.util.Map;
 import springtutorial.model.User;
 
 public interface DiscountStrategy {
-	Map.Entry<String, Float> getDiscountPercentage(User user, Date date);
+	DiscountStrategy.DiscountWithPercentage getDiscountPercentage(User user, Date date);
 
-	final class MyEntry implements Map.Entry<String, Float> {
+	final class DiscountWithPercentage implements Map.Entry<String, Float> {
 		private final String key;
 		private Float value;
 
-		public MyEntry(String key, Float value) {
+		public DiscountWithPercentage(String key, Float value) {
 			this.key = key;
 			this.value = value;
 		}
