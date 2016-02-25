@@ -53,8 +53,8 @@ public class Event {
 		return rating;
 	}
 
-	public void setRating(Rating rating) {
-		this.rating = rating;
+	public void setRating(String rating) {
+		this.rating = Rating.valueOf(rating.toUpperCase());
 	}
 
 
