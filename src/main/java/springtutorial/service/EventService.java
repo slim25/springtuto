@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import springtutorial.exception.EventNotFound;
+import springtutorial.exception.UserNotFound;
 import springtutorial.model.Auditorium;
 import springtutorial.model.Event;
 
@@ -17,7 +18,7 @@ public interface EventService {
 
 	Event getByName(String name) throws EventNotFound;
 
-	List<Event> getAll();
+	List<Event> getAll() throws UserNotFound, EventNotFound;
 	
 	List<Event> getForDateRange(Date from, Date to);
 

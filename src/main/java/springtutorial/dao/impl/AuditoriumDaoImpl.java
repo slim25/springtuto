@@ -27,6 +27,7 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
 	private final String SQL_GET_AUDITORIUM_VIP_SEAT = "SELECT vip_seat_number FROM vip_seats WHERE auditorium_id=?";
 	private final String SQL_GET_SEATS_NUMBER = "SELECT numberOfSeats FROM auditorium WHERE id=?";
 	private final String SQL_GET_AUDITORIUMS = "SELECT * FROM auditorium";
+	private final String SQL_GET_AUDITORIUM_BY_ID = "SELECT * FROM auditorium WHERE id=?";
 	
 	public static List<Auditorium> auditoriums;
 
@@ -72,6 +73,22 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
 		}
 		return auditoriums;
 	}
+	@Override
+	public Auditorium getAuditoriumById(Integer id) {
+		Auditorium auditorium = null;
+		
+		
+		List<Map<String, Object>> auditoriumRows = jdbcTemplate.queryForList(SQL_GET_AUDITORIUM_BY_ID,id);
+		for (Map<?, ?> row : auditoriumRows) {
+			auditorium = new Auditorium();
+			auditorium.setId((Integer)row.get("id"));
+			auditorium.setName((String)row.get("name"));
+			auditorium.setNumberOfSeats((Integer)row.get("numberOfSeats"));
+			auditorium.getVipSeats().addAll(getVipSeats(auditorium.getId()));
+		}
+		return auditorium;
+	}
+	
 	
 	public void initDefaultDBData(){
 		

@@ -169,7 +169,7 @@ public class App {
 		}
 	}
 	
-	private static void showUserService(App app) throws ParseException{
+	private static void showUserService(App app) throws ParseException, EventNotFound{
 		System.out.println("----- User Service");
 		List<Ticket> userBookedTicket = new ArrayList<>();
 		Event event = null;
@@ -212,7 +212,7 @@ public class App {
 		
 	}
 	
-	private static void showBookingService(App app){
+	private static void showBookingService(App app) throws EventNotFound, UserNotFound{
 		System.out.println("----- Booking Service");
 		// bookingService.getTicketPrice
 		Event testEvent = null;

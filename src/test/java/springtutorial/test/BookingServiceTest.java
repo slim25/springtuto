@@ -23,7 +23,9 @@ import springtutorial.dao.EventDao;
 import springtutorial.dao.UserDao;
 import springtutorial.dao.impl.EventDaoImpl;
 import springtutorial.dao.impl.UserDaoImpl;
+import springtutorial.exception.EventNotFound;
 import springtutorial.exception.NotExistSuchAuditorium;
+import springtutorial.exception.UserNotFound;
 import springtutorial.model.Auditorium;
 import springtutorial.model.Event;
 import springtutorial.model.Ticket;
@@ -74,16 +76,16 @@ public class BookingServiceTest extends BaseServiceTest{
 	
 
 	@Test
-	public void BtestBookTicket() throws NotExistSuchAuditorium, ParseException{
-		User userVitalik = UserDaoImpl.users.get(0);
-		Event testEvent = EventDaoImpl.events.get(0);
+	public void BtestBookTicket() throws NotExistSuchAuditorium, ParseException, EventNotFound, UserNotFound{
+		User userVitalik = userService.getAllUsers().get(0);
+		Event testEvent = eventService.getAll().get(0);
 		Date eventDate = testEvent.getAuditoriumAndDate().keySet().iterator().next();
 		Ticket ticket = new Ticket(55, testEvent, 4, userVitalik, eventDate);
 		boolean isBooked = bookingService.bookTicket(userVitalik, ticket);
 		
 		if(isBooked == false) fail("Booking service book ticket response = false;");
 		boolean userContains = false;
-		for(User user : UserDaoImpl.users){
+		for(User user : userService.getAllUsers()){
 			if(user.getId() == userVitalik.getId() && user.getBookedTickets().contains(ticket)){
 				userContains = true;
 			}
@@ -91,8 +93,15 @@ public class BookingServiceTest extends BaseServiceTest{
 		if(userContains == false) fail("Booked ticket not writed to user as booked ticket");
 		
 		boolean eventContains = false;
-		for(Event event : EventDaoImpl.events){
-			if(event.getId() == testEvent.getId() && testEvent.getPurchasedTickets().contains(ticket)){
+		for(Event event : eventService.getAll()){
+			boolean ticketContains =false;
+			for(Ticket purchasedTicket : event.getPurchasedTickets()){
+				if(purchasedTicket.getDate().compareTo(ticket.getDate()) == 0
+						&& purchasedTicket.getId().equals(ticket.getId())){
+					ticketContains = true;
+				}
+			}
+			if(event.getId() == testEvent.getId() && ticketContains){
 				eventContains = true;
 			}
 		}
@@ -100,9 +109,9 @@ public class BookingServiceTest extends BaseServiceTest{
 	}
 	
 	@Test
-	public void CtestGetPurchasedTicketForEvent() throws NotExistSuchAuditorium, ParseException{
-		Event testEvent = EventDaoImpl.events.get(0);
-		Date eventDate = dateformat.parse("2016-02-7");
+	public void CtestGetPurchasedTicketForEvent() throws NotExistSuchAuditorium, ParseException, UserNotFound, EventNotFound{
+		Event testEvent = eventService.getAll().get(0);
+		Date eventDate = dateformat.parse("2016-02-09");
 		Set<Ticket> purchasedTickets = bookingService.getPurchasedTicketsForEvent(testEvent, eventDate);
 		
 		assertTrue("Size of purchased tickets for some date is not equals with template size", purchasedTickets.size() == 1);

@@ -66,6 +66,7 @@ public abstract class BaseServiceTest {
 		User userBobko = new User(userId, userEmail, userName, userBookedTicket, birthday);
 		userBobko.getBookedTickets().get(0).setUser(userBobko);
 		userBobko.getBookedTickets().get(0).getEvent().getPurchasedTickets().iterator().next().setUser(userBobko);
+		userService.register(userBobko);
 		return userBobko;
 
 	}

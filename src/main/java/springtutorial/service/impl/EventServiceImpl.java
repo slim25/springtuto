@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import springtutorial.dao.EventDao;
 import springtutorial.exception.EventNotFound;
+import springtutorial.exception.UserNotFound;
 import springtutorial.model.Auditorium;
 import springtutorial.model.Event;
 import springtutorial.service.EventService;
@@ -33,7 +34,7 @@ public class EventServiceImpl implements EventService {
 		return eventDao.getByName(name);
 	}
 
-	public List<Event> getAll() {
+	public List<Event> getAll() throws UserNotFound, EventNotFound {
 		return eventDao.getAll();
 	}
 

@@ -15,4 +15,6 @@ public interface AuditoriumDao {
 
 	List<Auditorium> getAuditoriums();
 
+	Auditorium getAuditoriumById(Integer integer);
+
 }

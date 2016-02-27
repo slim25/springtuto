@@ -1,5 +1,6 @@
 package springtutorial.model;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,7 @@ public class Event {
 		this.id = id;
 	}
 
-	public Set<Ticket> getPurchasedTickets() {
+	public Collection<Ticket> getPurchasedTickets() {
 		return purchasedTickets;
 	}
 
@@ -107,6 +108,54 @@ public class Event {
 		return "Event [id=" + id + ", name=" + name + ", price=" + price + ", rating=" + rating + ", timesPerDay="
 				+ timesPerDay + ", auditoriumAndDate=" + auditoriumAndDate + ", purchasedTickets=" + purchasedTickets
 				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
+		result = prime * result + ((timesPerDay == null) ? 0 : timesPerDay.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Event other = (Event) obj;
+		
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
+		
+		if (rating != other.rating)
+			return false;
+		if (timesPerDay == null) {
+			if (other.timesPerDay != null)
+				return false;
+		} else if (!timesPerDay.equals(other.timesPerDay))
+			return false;
+		return true;
 	}
 	
 }

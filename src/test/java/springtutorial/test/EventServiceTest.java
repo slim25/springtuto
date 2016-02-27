@@ -36,7 +36,7 @@ public class EventServiceTest extends BaseServiceTest {
 	private static Event testEvent;
 
 	@Test
-	public void AtestCreateEvent() throws ParseException, UserNotFound {
+	public void AtestCreateEvent() throws ParseException, EventNotFound, UserNotFound {
 		Map<Date, Auditorium> dateAndAudetorium = new HashMap<>();
 		List<Integer> vipSeats = new ArrayList<>();
 		vipSeats.add(19);
@@ -53,7 +53,7 @@ public class EventServiceTest extends BaseServiceTest {
 		
 		eventService.create(testEvent);
 
-		assertTrue("Event does not created",EventDaoImpl.events.contains(testEvent));
+			assertTrue("Event does not created",eventService.getAll().contains(testEvent));
 
 	}
 	
@@ -64,13 +64,13 @@ public class EventServiceTest extends BaseServiceTest {
 	}
 	
 	@Test
-	public void CtestGetAll(){
+	public void CtestGetAll() throws UserNotFound, EventNotFound{
 		List<Event> allEvents = eventService.getAll();
 		assertTrue("Recieved event list size is not equal to template list size",allEvents.size() == 3);
 	}
 	
 	@Test
-	public void DtestAssignAuditorium() throws ParseException, EventNotFound{
+	public void DtestAssignAuditorium() throws ParseException, EventNotFound, UserNotFound{
 		List<Integer> vipSeats = new ArrayList<>();
 		vipSeats.add(19);
 		vipSeats.add(6);
@@ -79,13 +79,13 @@ public class EventServiceTest extends BaseServiceTest {
 		Date testDate = dateformat.parse("2016-02-15");
 		eventService.assignAuditorium(testEvent, testAuditorium, testDate);
 		Event receiverEventFromDB = null;
-		for(Event event : EventDaoImpl.events){
+		for(Event event : eventService.getAll()){
 			if(event.getId() == testEvent.getId()){
 				receiverEventFromDB = event;
 			}
 		}
 		for(Map.Entry<Date,Auditorium> entry : receiverEventFromDB.getAuditoriumAndDate().entrySet()){
-			if(entry.getKey().equals(testDate) && entry.getValue().equals(testAuditorium)){
+			if(entry.getKey().compareTo(testDate) == 0 && entry.getValue().equals(testAuditorium)){
 				return;
 			}
 		}

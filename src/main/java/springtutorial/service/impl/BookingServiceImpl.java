@@ -1,5 +1,6 @@
 package springtutorial.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import springtutorial.dao.EventDao;
@@ -18,6 +20,7 @@ import springtutorial.dao.UserDao;
 import springtutorial.dao.impl.EventDaoImpl;
 import springtutorial.dao.impl.UserDaoImpl;
 import springtutorial.exception.EventNotFound;
+import springtutorial.exception.UserNotFound;
 import springtutorial.model.Auditorium;
 import springtutorial.model.Event;
 import springtutorial.model.Ticket;
@@ -27,6 +30,12 @@ import springtutorial.service.BookingService;
 import springtutorial.service.DiscountService;
 @Service
 public class BookingServiceImpl implements BookingService {
+	private final String SQL_INSERT_BOOKED_TICKETS = "INSERT INTO ticket (id,event_id, seatNumber, user_id, event_date) VALUES (?, ?, ?, ?, ?)";
+	private final String SQL_GET_PURCHASED_TICKETS_FOR_EVENT = "SELECT ticket_id FROM purchasedTickets WHERE event_id=? AND ticket_id IN "
+			+ "(SELECT id FROM ticket WHERE event_date = ?)";
+	private final String SQL_GET_PURCHASED_TICKET_BY_ID = "SELECT * FROM ticket WHERE id=?";
+	private final String SQL_INSERT_PURCHASED_TICKETS = "INSERT INTO purchasedTickets (event_id, ticket_id) VALUES (?, ?)";
+	
 	@Autowired
 	@Qualifier("discountService")
 	DiscountService discountService;
@@ -36,6 +45,10 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	@Qualifier("userDao")
 	UserDao userDao;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
 	public BookingServiceImpl() {
 		System.out.println(" Init BookingServiceImpl");
 	}
@@ -60,49 +73,69 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public boolean bookTicket(User user, Ticket ticket) {
-		for(Iterator<User> iterator = UserDaoImpl.users.iterator();iterator.hasNext();){
-			User curUser = iterator.next();
-			if(curUser.isRegistered() && curUser.getId() == user.getId()){
-				curUser.addBookedTickets(ticket);
-				try {
-					eventDao.getByName(ticket.getEvent().getName()).addPurchasedTicket(ticket);
-					return true;
-				} catch (EventNotFound e) {
-					System.out.println("Ticket event not found");
-					e.printStackTrace();
-					return false;
-				}
-			}
-		}
-		return false;
+	public boolean bookTicket(User user, Ticket ticket) throws EventNotFound {
+		int resultUpdate = jdbcTemplate.update(SQL_INSERT_BOOKED_TICKETS, new Object[] {ticket.getId(), ticket.getEvent().getId(),
+				ticket.getSeatNumber(),user.getId() ,ticket.getDate()
+			});
+		int resultUpdatePurchasedTickets = jdbcTemplate.update(SQL_INSERT_PURCHASED_TICKETS, new Object[] {ticket.getEvent().getId(),ticket.getId()
+			});
+		
+//		for(Iterator<User> iterator = userDao.getUsers().iterator();iterator.hasNext();){
+//			User curUser = iterator.next();
+//			if(curUser.isRegistered() && curUser.getId() == user.getId()){
+//				curUser.addBookedTickets(ticket);
+//				try {
+//					eventDao.getByName(ticket.getEvent().getName()).addPurchasedTicket(ticket);
+//					return true;
+//				} catch (EventNotFound e) {
+//					System.out.println("Ticket event not found");
+//					e.printStackTrace();
+//					return false;
+//				}
+//			}
+//		}
+		return resultUpdate > 0 && resultUpdatePurchasedTickets> 0;
 	}
 
 	@Override
-	public Set<Ticket> getPurchasedTicketsForEvent(Event event, Date date) {
-		boolean eventPresent = false;
-		for(Event ev : EventDaoImpl.events){
-			if(ev.getId() == event.getId()){
-				event = ev;
-				eventPresent = true;
+	public Set<Ticket> getPurchasedTicketsForEvent(Event event, Date date) throws UserNotFound, EventNotFound {
+		Set<Ticket> purchasedTickets = new HashSet<>();
+		jdbcTemplate.queryForList("SELECT * FROM ticket");
+		jdbcTemplate.queryForList("SELECT * FROM purchasedTickets");
+		
+		List<Map<String, Object>> purchasedTicketsRows = jdbcTemplate.queryForList(SQL_GET_PURCHASED_TICKETS_FOR_EVENT, event.getId(),date);
+		for (Map<?, ?> ticketIdRow : purchasedTicketsRows) {
+			Integer ticketId = (Integer)ticketIdRow.get("ticket_id");
+			Ticket ticket = jdbcTemplate.queryForObject(SQL_GET_PURCHASED_TICKET_BY_ID, new Object[] { ticketId }, new Ticket());
+			if(ticket != null){
+				purchasedTickets.add(ticket);
 			}
 		}
-		if(eventPresent == false) return null;
-		Set<Ticket> result = new HashSet<>();
+		return purchasedTickets;
 		
-		Calendar purchaseTicketCalendar = Calendar.getInstance();
-		purchaseTicketCalendar.setTime(date);
-		
-		Calendar allPurchasedCalendar = Calendar.getInstance();
-		
-		for(Ticket ticket : event.getPurchasedTickets()){
-			allPurchasedCalendar.setTime(ticket.getDate());
-			if(allPurchasedCalendar.get(Calendar.MONTH) == purchaseTicketCalendar.get(Calendar.MONTH) && 
-					allPurchasedCalendar.get(Calendar.DAY_OF_MONTH) == purchaseTicketCalendar.get(Calendar.DAY_OF_MONTH)){
-				result.add(ticket);
-			}
-		}
-		return result;
+//		boolean eventPresent = false;
+//		for(Event ev : eventDao.getAll()){
+//			if(ev.getId() == event.getId()){
+//				event = ev;
+//				eventPresent = true;
+//			}
+//		}
+//		if(eventPresent == false) return null;
+//		Set<Ticket> result = new HashSet<>();
+//		
+//		Calendar purchaseTicketCalendar = Calendar.getInstance();
+//		purchaseTicketCalendar.setTime(date);
+//		
+//		Calendar allPurchasedCalendar = Calendar.getInstance();
+//		
+//		for(Ticket ticket : event.getPurchasedTickets()){
+//			allPurchasedCalendar.setTime(ticket.getDate());
+//			if(allPurchasedCalendar.get(Calendar.MONTH) == purchaseTicketCalendar.get(Calendar.MONTH) && 
+//					allPurchasedCalendar.get(Calendar.DAY_OF_MONTH) == purchaseTicketCalendar.get(Calendar.DAY_OF_MONTH)){
+//				result.add(ticket);
+//			}
+//		}
+//		return result;
 	}
 
 }

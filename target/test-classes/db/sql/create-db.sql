@@ -3,7 +3,7 @@ CREATE TABLE auditorium (
   id  INT NOT NULL AUTO_INCREMENT ,
   name VARCHAR(45) NOT NULL ,
   numberOfSeats  INT NOT NULL ,
-  PRIMARY KEY (id)
+  
 );
 
 CREATE TABLE vip_seats (
@@ -17,7 +17,7 @@ CREATE TABLE event (
 	price FLOAT NOT NULL ,
 	rating VARCHAR(45) NOT NULL ,
 	timesPerDay INT NOT NULL ,
-	PRIMARY KEY (id) 
+
 );
 
 CREATE TABLE event_auditorium_date (
@@ -37,7 +37,7 @@ CREATE TABLE ticket (
   seatNumber INT NOT NULL ,
   user_id INT NOT NULL ,
   event_date TIMESTAMP NOT NULL ,
-  PRIMARY KEY (id) 
+  
 );
 
 CREATE TABLE users (
@@ -46,7 +46,7 @@ CREATE TABLE users (
   name VARCHAR(45) NOT NULL ,
   birthday TIMESTAMP NOT NULL ,
   registered TINYINT NOT NULL ,
-  PRIMARY KEY (id) 
+
 );
 
 
